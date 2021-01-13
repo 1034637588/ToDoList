@@ -1,18 +1,17 @@
 import { createStore } from 'vuex'
-import note, { NoteState } from './modules/note'
-
+import { NoteState } from './typings'
+import note from './modules/note'
 export interface GlobalState {
   note: NoteState
 }
 // 同样也变成了函数的写法
 const store = createStore<GlobalState>({
-  // state: {
-  // },
   mutations: {
   },
   actions: {
   },
   modules: {
+    note
   }
 })
 export default store

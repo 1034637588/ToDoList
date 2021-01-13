@@ -1,21 +1,19 @@
 import { Module } from 'vuex'
-import {GlobalState} from '../index'
-interface Note{
-    title:string
-}
-export interface NoteState {
-    notes:Note[] // 数组也使用接口做一下规范
-}
-const state:NoteState = {
-    notes:[]
+import store, { GlobalState } from '../index'
+import { NoteState,Note } from '../typings'
+import * as Types from '../action-types'
+const state: NoteState = {
+    notes: [{
+        title: '第一个标签',
+    }]
 }
 // 需要传入两个泛型 一个是 本身的state类型 和 全局的state类型 这样用的时候就可以提示了
-const note: Module<NoteState,GlobalState> = {
-    namespaced:true,
+const note: Module<NoteState, GlobalState> = {
+    namespaced: true,
     state,
-    mutations:{
-        addNote(){
-
+    mutations: {
+        [Types.ADD_NOTES](state,payload:Note) { // 添加一条便签
+            state.notes.push(payload)
         }
     }
 }
