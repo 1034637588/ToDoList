@@ -1,9 +1,13 @@
 import { createStore } from 'vuex'
+import note, { NoteState } from './modules/note'
 
+export interface GlobalState {
+  note: NoteState
+}
 // 同样也变成了函数的写法
-export default createStore({
-  state: {
-  },
+const store = createStore<GlobalState>({
+  // state: {
+  // },
   mutations: {
   },
   actions: {
@@ -11,3 +15,4 @@ export default createStore({
   modules: {
   }
 })
+export default store
