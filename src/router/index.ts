@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Note from '../views/Note/Note.vue'
-
+import AddNote from '../views/Note/AddNote.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -11,7 +11,18 @@ const routes: Array<RouteRecordRaw> = [
     path: '/todo',
     name: 'ToDo',
     component: () => import (/* webpackChunkName: "ToDo" */'../views/ToDo/ToDo.vue')
-  } 
+  },
+  {
+    path: '/addNote',
+    name: 'AddNote',
+    // component: () => import (/* webpackChunkName: "AddNote" */'../views/Note/AddNote.vue' )
+    components:{
+      addNote: AddNote
+    },
+    meta:{
+      isAllHeight:true
+    }
+  }
 ]
 
 // 创建都变成了函数式的写法

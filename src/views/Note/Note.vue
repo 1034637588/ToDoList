@@ -6,6 +6,7 @@
       input-align="center"
     />
     <note-list></note-list>
+    <van-button round icon="plus" class="button" type="primary"></van-button>
   </div>
   <!-- <div v-model:a="a" v-model:b="b"></div>  可以多个v-model 相当于是 .sync 的操作-->
 </template>
@@ -79,6 +80,19 @@ export default defineComponent({
   }
   .van-search {
     padding: 0;
+    ::v-deep .van-search__content{
+    background-color: rgb(237,237,237);
+    border-radius: 0.15rem;
+  }
+  }
+  .button{
+    position: fixed;
+    bottom: 0.2rem;
+    right: 0.2rem;
+  }
+  .van-button{
+    width: 0.44rem;
+    height: 0.44rem;
   }
 }
 </style>

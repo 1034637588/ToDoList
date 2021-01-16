@@ -1,5 +1,6 @@
 <template>
   <div class="box">
+    <router-view name="addNote"/>
     <Header></Header>
     <router-view></router-view>
   </div>
