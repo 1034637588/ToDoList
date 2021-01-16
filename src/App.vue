@@ -1,22 +1,25 @@
 <template>
-  <div id="nav">
-    <div class="header">
-      <div class="h-left">
-        <router-link :to="{name:'Note'}">便签</router-link>
-      </div>
-      <div class="h-right">
-        <router-link :to="{name:'ToDo'}">待办</router-link>
-      </div>
-    </div>
+  <div class="box">
+    <Header></Header>
     <router-view></router-view>
   </div>
 </template>
-
+<script lang="ts">
+import { defineComponent } from "vue";
+import Header from './components/Header.vue'
+export default defineComponent({
+  components:{
+    Header
+  }
+})
+</script>
 <style lang="scss">
-.header{
-  height: 5vh;
-  background-color: aquamarine;
+.box{
+  width: 100vw;
+  height: 100vh;
+  padding: 0.1rem;
+  box-sizing: border-box;
   display: flex;
-  align-items: center;
+  flex-flow: column nowrap;
 }
 </style>

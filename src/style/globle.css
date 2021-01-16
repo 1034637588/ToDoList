@@ -1,0 +1,8 @@
+body{
+    font-size: 0.12rem;
+    color: rgb(25, 25, 25);
+    background-color: rgb(247, 247, 247);
+}
+a:active{
+    color: rgb(25, 25, 25);
+}

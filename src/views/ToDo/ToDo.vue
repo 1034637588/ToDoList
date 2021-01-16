@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="todo-box">
     todo
   </div>
 </template>
@@ -15,3 +15,12 @@ export default defineComponent({
   
 });
 </script>
+<style lang="scss" scoped>
+.todo-box{
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  flex: 1;
+
+}
+</style>

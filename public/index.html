@@ -14,4 +14,20 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
+  <script>
+    //=>根据当前设备的宽度,动态计算出REM的换算比例,实现页面中元素的等比缩放
+    ~function anonymous(window) {
+        let computedREM = function computedREM() {
+            let winW = document.documentElement.clientWidth,
+                desW = 375;
+            if (winW >= 375) {
+                document.documentElement.style.fontSize = '100px';
+                return;
+            }
+            document.documentElement.style.fontSize = winW / desW * 100 + 'px';
+        };
+        computedREM();
+        window.addEventListener('resize', computedREM);
+    }(window);
+</script>
 </html>
