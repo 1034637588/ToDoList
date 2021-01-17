@@ -6,7 +6,7 @@
       input-align="center"
     />
     <note-list></note-list>
-    <van-button round icon="plus" class="button" type="primary"></van-button>
+    <van-button round icon="plus" class="button" type="primary" @click="goToAdd"></van-button>
   </div>
   <!-- <div v-model:a="a" v-model:b="b"></div>  可以多个v-model 相当于是 .sync 的操作-->
 </template>
@@ -16,6 +16,7 @@
 import { GlobalState } from "@/store";
 import { computed, defineComponent, PropType, reactive, toRefs } from "vue";
 import { useStore, Store } from "vuex";
+import { useRoute,useRouter } from 'vue-router'
 import { Note } from "../../store/typings";
 import * as Types from "../../store/action-types";
 import NoteList from "../../components/NoteList.vue";
@@ -35,7 +36,6 @@ function useNote(store: Store<GlobalState>) {
     ...toRefs(state),
   };
 }
-
 export default defineComponent({
   name: "Note",
   components: {
@@ -51,10 +51,15 @@ export default defineComponent({
     let store = useStore<GlobalState>();
     let { notes, addNotes } = useNote(store);
     let note = notes;
+    let router = useRouter();
     function add() {
       addNotes({ title: "123" });
     }
-    return { note, add };
+// 路由跳转
+    function goToAdd(){
+      router.push({path:'/addNote'})
+    }
+    return { note, add, goToAdd };
   },
 });
 </script>
