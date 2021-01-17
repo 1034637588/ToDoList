@@ -1,39 +1,37 @@
 <template>
   <div class="list-box">
     <div class="list-left">
-      <div class="list-item">
+      <div class="list-item" v-for="item in notes" :key="item.content">
         <div class="item-content">
           <p class="item-text">
-            我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我
-            我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我
-            我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我
-            我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我
+            {{ item.content }}
           </p>
         </div>
         <div class="item-bottom">
-          <p>2021年12月12日</p>
+          <p>{{ item.dates }}</p>
         </div>
       </div>
-      <div class="list-item"></div>
-      <div class="list-item"></div>
-      <div class="list-item"></div>
-      <div class="list-item"></div>
     </div>
     <div class="list-right">
-      <div class="list-item"></div>
-      <div class="list-item"></div>
-      <div class="list-item"></div>
       <div class="list-item"></div>
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
+import * as Typeing from '../store/typings/index'
 export default defineComponent({
   name: "NoteList",
+  props:{
+    notes:{
+      type:Array as PropType<Typeing.Note[]> // 可以做类型断言
+    }
+  },
   components: {},
 });
 </script>
+
 <style lang="scss" scoped>
 .list-box {
   width: 100%;
