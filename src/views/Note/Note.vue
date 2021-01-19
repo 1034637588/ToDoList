@@ -55,7 +55,7 @@ export default defineComponent({
     });
 
     function add() {
-      addNotes({dates:'12',content:"dier"});
+      // addNotes({dates:'12',content:"dier",id:'12'});
     }
 
     // 路由跳转

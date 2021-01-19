@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
-axios.defaults.baseURL = '';
+axios.defaults.baseURL = 'http://localhost:3000';
 axios.interceptors.request.use((config: AxiosRequestConfig) => {
     return config
 });

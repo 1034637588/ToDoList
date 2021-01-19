@@ -1,5 +1,6 @@
 // 便签对象的接口
 export interface Note{
+    _id?:string;
     dates:string;
     content:string;
 }
@@ -10,6 +11,7 @@ export interface NoteState {
 
 // 待办的接口
 export interface ToDo {
+    _id?:string;
     done:boolean;
     content:string;
 }

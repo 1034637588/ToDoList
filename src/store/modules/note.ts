@@ -4,8 +4,9 @@ import { NoteState,Note } from '../typings'
 import * as Types from '../action-types'
 const state: NoteState = {
     notes: [{
+        _id:'10',
         dates:"2010/15/13",
-        content:'第一个第一个第一个第一个第一个第一个第一个第一个第一个第一个第一个第一个第一个第一个第一个第一个第一个第一个'
+        content:''
     }]
 }
 // 需要传入两个泛型 一个是 本身的state类型 和 全局的state类型 这样用的时候就可以提示了
