@@ -55,9 +55,8 @@ export default defineComponent({
     });
 
     function add() {
-      // addNotes({dates:'12',content:"dier",id:'12'});
     }
-
+  
     // 路由跳转
     function goToAdd() {
       router.push({ path: "/addNote" });
