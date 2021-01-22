@@ -1,3 +1,5 @@
+import { Ref } from 'vue';
+
 // 便签对象的接口
 export interface Note{
     _id?:string;
@@ -6,7 +8,8 @@ export interface Note{
 }
 // 便签状态的接口
 export interface NoteState {
-    notes:Note[] // 数组也使用接口做一下规范
+    notes:Note[], // 数组也使用接口做一下规范
+    isRequestError:boolean
 }
 
 // 待办的接口
@@ -32,4 +35,11 @@ export interface Result<T> {
     status:number;
     data:T;
     message:string;
+}
+
+// noteList state的声明
+export interface noteListSate {
+    leftList: Note[];
+    rightList: Note[];
+    notes: Note[];
 }

@@ -5,7 +5,7 @@
       placeholder="搜索便签"
       input-align="center"
     />
-    <note-list :notes="noteList"></note-list>
+    <note-list :notes="notes"></note-list>
     <van-button
       round
       icon="plus"
@@ -53,15 +53,16 @@ export default defineComponent({
       searchValue: "",
       noteList:[]
     });
-
-    function add() {
-    }
-    getNotesByPage({page:1,size:10});
+    // 获取初始化数据
+    getNotesByPage({page:1,size:10}); 
     // 路由跳转
     function goToAdd() {
       router.push({ path: "/addNote" });
     }
-    return { notes, add, goToAdd, ...toRefs(state),
+    return { 
+      notes, 
+      goToAdd, 
+      ...toRefs(state)
    };
   },
 });
