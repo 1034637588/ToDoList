@@ -5,7 +5,7 @@
       placeholder="搜索便签"
       input-align="center"
     />
-    <note-list :notes="notes"></note-list>
+    <note-list :notes="noteList"></note-list>
     <van-button
       round
       icon="plus"
@@ -23,20 +23,19 @@ import { GlobalState } from "@/store";
 import { computed, defineComponent, PropType, reactive, toRefs } from "vue";
 import { useStore, Store } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import { Note } from "../../store/typings";
+import { Note, Page } from "../../store/typings";
 import * as Types from "../../store/action-types";
 import NoteList from "../../components/NoteList.vue";
 // 封装note vuex相关操作 这样就解决了options API中 计算属性 方法等等要写在固定位置
 // 这样的写法 就可以把很多功能封装到一个函数中
 function useNote(store: Store<GlobalState>) {
   let notes = computed(() => store.state.note.notes);
-  function addNotes(note: Note) {
-    store.commit(`note/${Types.ADD_NOTES}`, note);
+  function getNotesByPage(paylod:Page) {
+    store.dispatch(`note/${Types.INIT_NOTES}`, paylod);
   }
-
   return {
     notes,
-    addNotes,
+    getNotesByPage,
   };
 }
 
@@ -48,15 +47,16 @@ export default defineComponent({
   // emits: ["addnotes"], // 这样通过context.emit 就可以做提示
   setup(props, context) {
     let store = useStore<GlobalState>();
-    let { notes, addNotes } = useNote(store);
+    let { notes, getNotesByPage } = useNote(store);
     let router = useRouter();
     const state = reactive({
       searchValue: "",
+      noteList:[]
     });
 
     function add() {
     }
-  
+    getNotesByPage({page:1,size:10});
     // 路由跳转
     function goToAdd() {
       router.push({ path: "/addNote" });

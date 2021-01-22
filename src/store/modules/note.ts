@@ -1,6 +1,7 @@
 import { Module } from 'vuex'
 import store, { GlobalState } from '../index'
-import { NoteState,Note } from '../typings'
+import { NoteState,Note, Page, Result } from '../typings'
+import * as NoteAPI from '../../api/notes'
 import * as Types from '../action-types'
 const state: NoteState = {
     notes: []
@@ -12,6 +13,16 @@ const note: Module<NoteState, GlobalState> = {
     mutations: {
         [Types.ADD_NOTES](state,payload:Note) { // 添加一条便签
             state.notes.push(payload)
+        },
+        [Types.INIT_NOTES](state,payload:Note[]){
+            state.notes = payload
+        }
+    },
+    actions:{
+        [Types.INIT_NOTES]({commit},paylod:Page){
+            NoteAPI.getNotes<Result<Note[]>>(paylod.page,paylod.size).then(data=>{
+                commit(Types.INIT_NOTES,data.data)
+            })
         }
     }
 }

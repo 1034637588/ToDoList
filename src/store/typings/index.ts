@@ -20,3 +20,16 @@ export interface ToDo {
 export interface ToDoState {
     todo:ToDo[] // 数组也使用接口做一下规范
 }
+
+// 分页payload
+export interface Page {
+  page:number,
+  size:number
+}
+
+// 请求结果
+export interface Result<T> {
+    status:number;
+    data:T;
+    message:string;
+}
