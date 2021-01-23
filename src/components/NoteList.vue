@@ -1,7 +1,7 @@
 <template>
   <div class="list-box">
-    <div class="list-left">
-      <div class="list-item" :ref="itembox" v-for="item in leftList" :key="item.id">
+    <div class="list-left" @click="clickItem">
+      <div class="list-item" :ref="itembox" v-for="item in leftList" :key="item['_id']">
         <div class="item-content">
           <p class="item-text">
             {{ item.content }}
@@ -10,10 +10,11 @@
         <div class="item-bottom">
           <p>{{ item.dates }}</p>
         </div>
+         <div class="click-model" :id="item['_id']"></div>
       </div>
     </div>
-    <div class="list-right">
-      <div class="list-item" v-for="item in rightList" :key="item.id">
+    <div class="list-right" @click="clickItem">
+      <div class="list-item" v-for="item in rightList" :key="item['_id']">
         <div class="item-content">
           <p class="item-text">
             {{ item.content }}
@@ -22,6 +23,7 @@
         <div class="item-bottom">
           <p>{{ item.dates }}</p>
         </div>
+        <div class="click-model" :id="item['_id']"></div>
       </div>
     </div>
   </div>
@@ -39,7 +41,7 @@ export default defineComponent({
   },
   setup(props, context) {
     let items:any[] = []; // 存储列表的元素
-    // 获取多个dom元素的用法
+    // 获取多个dom元素的用法 ref
     const itembox = (el = null)=>{
       items.push(el);
     };
@@ -51,7 +53,7 @@ export default defineComponent({
     const state = reactive(noteListSate);
     // 初始化瀑布流列表
     const initList = ()=>{
-      let leftHeightSum = 0;
+      let leftHeightSum = 0; // 用来分别记录左边当前高度 和右边当前高度
       let rightHeightSum = 0;
       let leftArr:any[] = [];
       let rightArr:any[] = [];
@@ -65,18 +67,25 @@ export default defineComponent({
           rightHeightSum += item.clientHeight;
         }
       });
-      state.leftList = leftArr;
-      state.rightList = rightArr;
+      state.leftList = leftArr.reverse(); // 使倒叙 这样后添加的在上面
+      state.rightList = rightArr.reverse();
       })
     }
-
-    watch(props!,()=>{
+    const clickItem = (e:any)=>{ // 通过事件委托监听item的点击，进行跳转详情
+      context.emit('ToAddNote',e.target.id);
+    }
+    onMounted(() => { // 赋初值
+      state.leftList = props.notes!
+      initList();
+    })
+    watch(props!,()=>{ // 参数改变后重新渲染
      state.leftList = props.notes!
      initList();
     });
     return {
       ...toRefs(state),
-      itembox
+      itembox,
+      clickItem
     };
   },
 });
@@ -103,6 +112,7 @@ export default defineComponent({
     border-radius: 0.15rem;
     margin-top: 0.1rem;
     padding: 0.2rem;
+    position: relative;
     .item-content {
       max-height: 1.25rem;
       font-size: 0.16rem;
@@ -122,6 +132,13 @@ export default defineComponent({
       color: rgb(151, 151, 151);
       display: flex;
       align-items: flex-end;
+    }
+    .click-model{
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
     }
   }
 }

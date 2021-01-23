@@ -5,13 +5,15 @@
       placeholder="搜索便签"
       input-align="center"
     />
-    <note-list :notes="notes"></note-list>
+    <note-list 
+    :notes="notes"
+    @ToAddNote="clickItem" ></note-list>
     <van-button
       round
       icon="plus"
       class="button"
       type="primary"
-      @click="goToAdd"
+      @click="clickAdd"
     ></van-button>
   </div>
   <!-- <div v-model:a="a" v-model:b="b"></div>  可以多个v-model 相当于是 .sync 的操作-->
@@ -26,18 +28,8 @@ import { useRoute, useRouter } from "vue-router";
 import { Note, Page } from "../../store/typings";
 import * as Types from "../../store/action-types";
 import NoteList from "../../components/NoteList.vue";
-// 封装note vuex相关操作 这样就解决了options API中 计算属性 方法等等要写在固定位置
-// 这样的写法 就可以把很多功能封装到一个函数中
-function useNote(store: Store<GlobalState>) {
-  let notes = computed(() => store.state.note.notes);
-  function getNotesByPage(paylod:Page) {
-    store.dispatch(`note/${Types.INIT_NOTES}`, paylod);
-  }
-  return {
-    notes,
-    getNotesByPage,
-  };
-}
+import useNoteState from '../../hooks/useNoteState';
+
 
 export default defineComponent({
   name: "Note",
@@ -47,21 +39,27 @@ export default defineComponent({
   // emits: ["addnotes"], // 这样通过context.emit 就可以做提示
   setup(props, context) {
     let store = useStore<GlobalState>();
-    let { notes, getNotesByPage } = useNote(store);
+    let { notes, getNotesByPage } = useNoteState(store);
     let router = useRouter();
     const state = reactive({
       searchValue: "",
       noteList:[]
     });
-    // 获取初始化数据
-    getNotesByPage({page:1,size:10}); 
-    // 路由跳转
-    function goToAdd() {
-      router.push({ path: "/addNote" });
+    //获取初始化数据 并且缓存 如果store存在 就不重新请求
+    if(store.state.note.notes.length === 0) {
+       getNotesByPage({page:1,size:30});
     }
-    return { 
+    // 路由跳转
+    const clickAdd = ()=>{
+      router.push({ path: "/addNote"});
+    }
+    const clickItem = (id:string)=>{
+      router.push({ path: "/addNote",query:{id}});
+    }
+    return {
       notes, 
-      goToAdd, 
+      clickAdd, 
+      clickItem,
       ...toRefs(state)
    };
   },

@@ -3,12 +3,16 @@ import { Note } from '@/store/typings';
 
 // 分页
 export function getNotes<T>(page: number, size: number) {
-    return axios.get<T, T>(`/note/${page}/${size}`);
+    return axios.get<T, T>(`/note/page/${page}/${size}`);
 }
 
 // 搜索API
 export function getNoteListByContent<T>(content:string) {
-    return axios.get<T,T>(`/note/${content}`);
+    return axios.get<T,T>(`/note/content/${content}`);
+}
+// id 查询
+export function getNoteById<T>(id:string){
+    return axios.get<T,T>(`/note/id/${id}`);
 }
 
 // 添加note
