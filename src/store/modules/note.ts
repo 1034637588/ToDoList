@@ -5,7 +5,8 @@ import * as NoteAPI from '../../api/notes'
 import * as Types from '../action-types'
 const state: NoteState = {
     notes: [],
-    isRequestError: false
+    isRequestError: false,
+    isLoading: false
 }
 // 需要传入两个泛型 一个是 本身的state类型 和 全局的state类型 这样用的时候就可以提示了
 const note: Module<NoteState, GlobalState> = {
@@ -16,11 +17,14 @@ const note: Module<NoteState, GlobalState> = {
             state.notes.push(payload)
         },
         [Types.INIT_NOTES](state, payload: Note[]) {
-            state.notes = payload
+            state.notes.push(...payload)
         },
         [Types.SET_ERROR](state, payload: boolean) {
             state.isRequestError = payload
         },
+        [Types.SET_LOADIBG](state,payload:boolean){
+            state.isLoading = payload
+        }
     },
     actions: {
         // 分页请求

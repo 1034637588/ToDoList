@@ -79,6 +79,8 @@ import LongTouch from "../hooks/longTouch";
 import useLoadMore from "../hooks/useLoadMore";
 import store from "@/store";
 import * as Types from "../store/action-types";
+import useNoteState from '../hooks/useNoteState';
+
 export default defineComponent({
   name: "NoteList",
   props: {
@@ -92,10 +94,8 @@ export default defineComponent({
     const itembox = (el = null) => {
       items.add(el);
     };
-
     const refListBox = ref<null | HTMLElement>(null);
-    useLoadMore(refListBox, store, `note/$${Types.INIT_NOTES}`);
-
+    useLoadMore(refListBox,context); // 处理触底加载
     const noteListSate: Typeing.noteListSate = {
       leftList: [],
       rightList: [],
@@ -155,7 +155,7 @@ export default defineComponent({
       clickItem,
       touchStart,
       touchEnd,
-      refListBox,
+      refListBox
     };
   },
 });
@@ -173,6 +173,7 @@ export default defineComponent({
   height: 100%;
   overflow: auto;
   display: flex;
+  position: relative;
   &::-webkit-scrollbar {
     /* 滚动条宽 */
     display: none;

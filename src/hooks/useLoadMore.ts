@@ -1,8 +1,6 @@
-import { Ref, onMounted } from 'vue';
-import { Store } from 'vuex';
-import { GlobalState } from '@/store';
+import { Ref, onMounted, SetupContext } from 'vue';
 
-export default function useLoadMore(element:Ref<null|HTMLElement>,store:Store<GlobalState>,type:string){
+export default function useLoadMore(element:Ref<null|HTMLElement>,ctx: SetupContext<Record<string, any>>){
 
     function loadMore(){
         // 获取可视区的高度
@@ -10,7 +8,7 @@ export default function useLoadMore(element:Ref<null|HTMLElement>,store:Store<Gl
         let scorllTop = element.value?.scrollTop;
         let scorllHeight = element.value?.scrollHeight;
         if(containerHeight! + scorllTop! + 20 >= scorllHeight!){
-            console.log('触底了');
+            ctx.emit('loadMore');
         }
     }
 

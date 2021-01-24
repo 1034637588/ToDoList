@@ -8,6 +8,7 @@ import * as Types from "../store/action-types";
 // 这样的写法 就可以把很多功能封装到一个函数中
 export default function useNote(store: Store<GlobalState>) {
     let notes = computed(() => store.state.note.notes); // 使用computed可以使数据变成响应式
+    let isLoading = computed(()=>store.state.note.isLoading);
     function getNotesByPage(paylod:Page) {
       store.dispatch(`note/${Types.INIT_NOTES}`, paylod);
     }
@@ -25,6 +26,7 @@ export default function useNote(store: Store<GlobalState>) {
       getNotesByPage,
       addNote,
       updateNote,
-      deleteNote
+      deleteNote,
+      isLoading
     };
   }

@@ -8,12 +8,16 @@
     <note-list 
     :notes="notes"
     @ToAddNote="clickItem"
-    @longTouch="longTouch" ></note-list>
+    @longTouch="longTouch"
+    @loadMore="loadMore" ></note-list>
     <van-popup v-model:show="show" position="bottom" :style="{ height: '10%' }" >
       <div class="delete-box" @click="handleDel">
         删除
       </div>
     </van-popup>
+    <div class="loading-box">
+      <van-loading size="24px" v-show="isLoading" vertical>加载中...</van-loading>
+    </div>
     <van-button
       round
       icon="plus"
@@ -45,14 +49,19 @@ export default defineComponent({
   // emits: ["addnotes"], // 这样通过context.emit 就可以做提示
   setup(props, context) {
     let store = useStore<GlobalState>();
-    let { notes, getNotesByPage,deleteNote } = useNoteState(store);
+    let { notes, getNotesByPage,deleteNote,isLoading } = useNoteState(store);
     let router = useRouter();
     const state = reactive({
-      searchValue: ""
+      searchValue: "",
+      page: 1,
+      size: 15
     });
     //获取初始化数据 并且缓存 如果store存在 就不重新请求
     if(store.state.note.notes.length === 0) {
-       getNotesByPage({page:1,size:30});
+       getNotesByPage({
+         page:state.page,
+         size:state.size
+       });
     }
     // 路由跳转
     const clickAdd = ()=>{
@@ -69,9 +78,20 @@ export default defineComponent({
         show.value = true;
         id = id;
     }
+    // 处理删除
     const handleDel= async()=>{
       await deleteNote(id);
       show.value = false;
+    }
+    // 处理加载更多
+    const loadMore = async () => {
+       store.commit(`note/${Types.SET_LOADIBG}`,true);
+       state.page++;
+       await getNotesByPage({
+         page:state.page,
+         size:state.size
+       });
+      store.commit(`note/${Types.SET_LOADIBG}`,false);
     }
     return {
       notes, 
@@ -80,7 +100,9 @@ export default defineComponent({
       longTouch,
       ...toRefs(state),
       show,
-      handleDel
+      handleDel,
+      loadMore,
+      isLoading
    };
   },
 });
@@ -114,6 +136,12 @@ export default defineComponent({
   .van-button {
     width: 0.44rem;
     height: 0.44rem;
+  }
+  .loading-box{
+    width: 100%;
+    height: 30px;
+    position: fixed;
+    bottom: 0rem;
   }
 }
 </style>
