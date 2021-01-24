@@ -77,20 +77,6 @@ export default defineComponent({
   overflow-x: hidden;
   overflow-y: auto;
   flex: 1;
-  &::-webkit-scrollbar {
-    /* 滚动条宽 */
-    display: none;
-  }
-  &::-webkit-scrollbar-thumb {
-    /* 滚动条 拖动条 */
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-  }
-  &::-webkit-scrollbar-track {
-    /* 滚动条背景槽 */
-    background-color: #eee;
-    border-radius: 6px;
-  }
   .van-search {
     padding: 0;
     ::v-deep .van-search__content {

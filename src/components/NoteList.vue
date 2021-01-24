@@ -1,51 +1,53 @@
 <template>
-  <div class="list-box">
+  <div class="list-box" ref="refListBox">
     <div
       class="list-left"
       @click="clickItem"
       @touchstart="touchStart"
       @touchend="touchEnd"
     >
-     <transition-group name="flip-list" class="flip-list" tag="div">
-      <div
-        class="list-item"
-        v-for="item in leftList"
-        :key="item['_id']"
-      >
-        <div class="item-content">
-          <p class="item-text">
-            {{ item.content }}
-          </p>
+      <transition-group name="flip-list" class="flip-list" tag="div">
+        <div class="list-item" v-for="item in leftList" :key="item['_id']">
+          <div class="item-content">
+            <p class="item-text">
+              {{ item.content }}
+            </p>
+          </div>
+          <div class="item-bottom">
+            <p>{{ item.dates }}</p>
+          </div>
+          <div class="click-model" :id="item['_id']"></div>
         </div>
-        <div class="item-bottom">
-          <p>{{ item.dates }}</p>
-        </div>
-        <div class="click-model" :id="item['_id']"></div>
-      </div>
-     </transition-group>
+      </transition-group>
     </div>
-    <div 
-      class="list-right" 
+    <div
+      class="list-right"
       @click="clickItem"
       @touchstart="touchStart"
-      @touchend="touchEnd">
-       <transition-group name="flip-list" class="flip-list" tag="div">
-          <div class="list-item" v-for="item in rightList" :key="item['_id']">
-            <div class="item-content">
-              <p class="item-text">
-                {{ item.content }}
-              </p>
-            </div>
-            <div class="item-bottom">
-              <p>{{ item.dates }}</p>
-            </div>
-            <div class="click-model" :id="item['_id']"></div>
+      @touchend="touchEnd"
+    >
+      <transition-group name="flip-list" class="flip-list" tag="div">
+        <div class="list-item" v-for="item in rightList" :key="item['_id']">
+          <div class="item-content">
+            <p class="item-text">
+              {{ item.content }}
+            </p>
           </div>
-       </transition-group>
+          <div class="item-bottom">
+            <p>{{ item.dates }}</p>
+          </div>
+          <div class="click-model" :id="item['_id']"></div>
+        </div>
+      </transition-group>
     </div>
     <!-- 用来初次渲染获取高度 -->
     <div class="init-list">
-      <div class="list-item" :ref="itembox" v-for="item in notes" :key="item['_id']">
+      <div
+        class="list-item"
+        :ref="itembox"
+        v-for="item in notes"
+        :key="item['_id']"
+      >
         <div class="item-content">
           <p class="item-text">
             {{ item.content }}
@@ -73,7 +75,10 @@ import {
   watch,
 } from "vue";
 import * as Typeing from "../store/typings/index";
-import LongTouch from '../hooks/longTouch';
+import LongTouch from "../hooks/longTouch";
+import useLoadMore from "../hooks/useLoadMore";
+import store from "@/store";
+import * as Types from "../store/action-types";
 export default defineComponent({
   name: "NoteList",
   props: {
@@ -85,12 +90,16 @@ export default defineComponent({
     let items = new Set(); // 存储列表的元素
     // 获取多个dom元素的用法 ref
     const itembox = (el = null) => {
-        items.add(el);
+      items.add(el);
     };
+
+    const refListBox = ref<null | HTMLElement>(null);
+    useLoadMore(refListBox, store, `note/$${Types.INIT_NOTES}`);
+
     const noteListSate: Typeing.noteListSate = {
       leftList: [],
       rightList: [],
-      notes: props.notes!
+      notes: props.notes!,
     };
     const state = reactive(noteListSate);
     // 初始化瀑布流列表
@@ -103,7 +112,7 @@ export default defineComponent({
         // 先渲染出来，然后再获取元素的高度进行分区
         items.delete(null); // 清除已经删除的dom
         let itemDoms = Array.from(items);
-        itemDoms.forEach((item:any, index) => {
+        itemDoms.forEach((item: any, index) => {
           if (leftHeightSum <= rightHeightSum) {
             // 哪边高度低 就放哪边
             leftArr.push(props.notes![index]);
@@ -119,21 +128,22 @@ export default defineComponent({
     };
     const clickItem = (e: any) => {
       // 通过事件委托监听item的点击，进行跳转详情
-      if(e.target.className == 'click-model'){
+      if (e.target.className == "click-model") {
         context.emit("ToAddNote", e.target.id);
       }
     };
-    const {touchStart,touchEnd} = LongTouch((id:string)=>{ // 获取长按事件
+    const { touchStart, touchEnd } = LongTouch((id: string) => {
+      // 获取长按事件
       items.clear(); // 将存储的dom元素清空 因为要重新渲染
-      context.emit("longTouch",id);
+      context.emit("longTouch", id);
     });
     onMounted(() => {
       // 赋初值
       initList();
     });
-    onUnmounted(()=>{
+    onUnmounted(() => {
       items.clear();
-    })
+    });
     watch(props!, () => {
       // 参数改变后重新渲染
       state.notes = props.notes!;
@@ -144,7 +154,8 @@ export default defineComponent({
       itembox,
       clickItem,
       touchStart,
-      touchEnd
+      touchEnd,
+      refListBox,
     };
   },
 });
@@ -154,12 +165,28 @@ export default defineComponent({
 .flip-list-move {
   transition: transform 0.8s ease;
 }
-.flip-list{
+.flip-list {
   width: 100%;
 }
 .list-box {
   width: 100%;
+  height: 100%;
+  overflow: auto;
   display: flex;
+  &::-webkit-scrollbar {
+    /* 滚动条宽 */
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    /* 滚动条 拖动条 */
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    /* 滚动条背景槽 */
+    background-color: #eee;
+    border-radius: 6px;
+  }
   .list-left {
     width: 50%;
   }
@@ -169,7 +196,7 @@ export default defineComponent({
     flex-flow: column nowrap;
     align-items: flex-end;
   }
-  .init-list{
+  .init-list {
     width: 50%;
     background-color: rgb(122, 129, 127);
     position: absolute;
@@ -212,12 +239,12 @@ export default defineComponent({
       right: 0;
       bottom: 0;
       left: 0;
-      -webkit-touch-callout:none;
-      -webkit-user-select:none;
-      -khtml-user-select:none;
-      -moz-user-select:none;
-      -ms-user-select:none;
-      user-select:none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
   }
 }
