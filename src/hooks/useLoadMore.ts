@@ -27,7 +27,7 @@ export default function useLoadMore(element:Ref<null|HTMLElement>,store:Store<Gl
     }
 
     onMounted(()=>{
-        element.value?.addEventListener('scroll',debounce(loadMore,2000));
+        element.value?.addEventListener('scroll',debounce(loadMore,1000));
         console.log(6666,element.value?.parentNode)
     })
 

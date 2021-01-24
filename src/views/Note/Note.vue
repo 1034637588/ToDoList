@@ -9,6 +9,11 @@
     :notes="notes"
     @ToAddNote="clickItem"
     @longTouch="longTouch" ></note-list>
+    <van-popup v-model:show="show" position="bottom" :style="{ height: '10%' }" >
+      <div class="delete-box" @click="handleDel">
+        删除
+      </div>
+    </van-popup>
     <van-button
       round
       icon="plus"
@@ -23,7 +28,7 @@
 <script lang="ts">
 // 平时开发的时候 都是插件给我们提示的 现在我们可以自带提示 通过defineComponent
 import { GlobalState } from "@/store";
-import { computed, defineComponent, PropType, reactive, toRefs, watch } from "vue";
+import { computed, defineComponent, PropType, reactive, ref, toRefs, watch } from "vue";
 import { useStore, Store } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { Note, Page } from "../../store/typings";
@@ -57,16 +62,25 @@ export default defineComponent({
       router.push({ path: "/addNote",query:{id}});
     }
 
+    // 处理长按
+    const show = ref(false);
+    let id:string;
     const longTouch =async (id:string)=>{
-        await deleteNote(id);
-        Notify({ type: 'primary', message: '删除成功！' });
+        show.value = true;
+        id = id;
+    }
+    const handleDel= async()=>{
+      await deleteNote(id);
+      show.value = false;
     }
     return {
       notes, 
       clickAdd, 
       clickItem,
       longTouch,
-      ...toRefs(state)
+      ...toRefs(state),
+      show,
+      handleDel
    };
   },
 });
@@ -74,8 +88,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .note-box {
   width: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   flex: 1;
   .van-search {
     padding: 0;
@@ -83,6 +96,15 @@ export default defineComponent({
       background-color: rgb(237, 237, 237);
       border-radius: 0.15rem;
     }
+  }
+  .delete-box{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #1989fa;
+    font-size: 0.23rem;
   }
   .button {
     position: fixed;
