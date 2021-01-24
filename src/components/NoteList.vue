@@ -181,7 +181,7 @@ export default defineComponent({
     box-sizing: border-box;
     width: 95%;
     max-height: 2rem;
-    background-color: #ccc;
+    background-color: rgb(245, 245, 245);
     border-radius: 0.15rem;
     margin-top: 0.1rem;
     padding: 0.2rem;

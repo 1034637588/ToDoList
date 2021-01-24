@@ -6,10 +6,10 @@
       </template>
     </van-nav-bar>
     <van-field
+      class="field"
       v-model="note.content"
       rows="1"
       autosize
-      label=""
       type="textarea"
       placeholder="请输入内容"
     />
@@ -106,5 +106,8 @@ export default defineComponent({
   overflow-y: auto;
   flex: 1;
   background-color: #fff;
+}
+.field{
+  font-size: 0.22rem;
 }
 </style>
