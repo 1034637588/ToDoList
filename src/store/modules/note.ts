@@ -57,6 +57,7 @@ const note: Module<NoteState, GlobalState> = {
                 });
                 notes.splice(index,1); // 删除
                 commit(Types.INIT_NOTES, notes); // 更新数据
+                return data.data;
             })
         },
     }

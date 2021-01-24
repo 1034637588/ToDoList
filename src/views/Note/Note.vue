@@ -7,7 +7,8 @@
     />
     <note-list 
     :notes="notes"
-    @ToAddNote="clickItem" ></note-list>
+    @ToAddNote="clickItem"
+    @longTouch="longTouch" ></note-list>
     <van-button
       round
       icon="plus"
@@ -22,14 +23,14 @@
 <script lang="ts">
 // 平时开发的时候 都是插件给我们提示的 现在我们可以自带提示 通过defineComponent
 import { GlobalState } from "@/store";
-import { computed, defineComponent, PropType, reactive, toRefs } from "vue";
+import { computed, defineComponent, PropType, reactive, toRefs, watch } from "vue";
 import { useStore, Store } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { Note, Page } from "../../store/typings";
 import * as Types from "../../store/action-types";
 import NoteList from "../../components/NoteList.vue";
 import useNoteState from '../../hooks/useNoteState';
-
+import { Notify } from 'vant';
 
 export default defineComponent({
   name: "Note",
@@ -39,11 +40,10 @@ export default defineComponent({
   // emits: ["addnotes"], // 这样通过context.emit 就可以做提示
   setup(props, context) {
     let store = useStore<GlobalState>();
-    let { notes, getNotesByPage } = useNoteState(store);
+    let { notes, getNotesByPage,deleteNote } = useNoteState(store);
     let router = useRouter();
     const state = reactive({
-      searchValue: "",
-      noteList:[]
+      searchValue: ""
     });
     //获取初始化数据 并且缓存 如果store存在 就不重新请求
     if(store.state.note.notes.length === 0) {
@@ -56,10 +56,16 @@ export default defineComponent({
     const clickItem = (id:string)=>{
       router.push({ path: "/addNote",query:{id}});
     }
+
+    const longTouch =async (id:string)=>{
+        await deleteNote(id);
+        Notify({ type: 'primary', message: '删除成功！' });
+    }
     return {
       notes, 
       clickAdd, 
       clickItem,
+      longTouch,
       ...toRefs(state)
    };
   },
