@@ -5,6 +5,7 @@
       @click="clickItem"
       @touchstart="touchStart"
       @touchend="touchEnd"
+      @touchmove="touchMove"
     >
       <transition-group name="flip-list" class="flip-list" tag="div">
         <div class="list-item" v-for="item in leftList" :key="item['_id']">
@@ -25,6 +26,7 @@
       @click="clickItem"
       @touchstart="touchStart"
       @touchend="touchEnd"
+      @touchmove="touchMove"
     >
       <transition-group name="flip-list" class="flip-list" tag="div">
         <div class="list-item" v-for="item in rightList" :key="item['_id']">
@@ -132,7 +134,7 @@ export default defineComponent({
         context.emit("ToAddNote", e.target.id);
       }
     };
-    const { touchStart, touchEnd } = LongTouch((id: string) => {
+    const { touchStart, touchEnd, touchMove } = LongTouch((id: string) => {
       // 获取长按事件
       items.clear(); // 将存储的dom元素清空 因为要重新渲染
       context.emit("longTouch", id);
@@ -155,6 +157,7 @@ export default defineComponent({
       clickItem,
       touchStart,
       touchEnd,
+      touchMove,
       refListBox
     };
   },
