@@ -85,11 +85,12 @@ export default defineComponent({
     notes: {
       type: Array as PropType<Typeing.Note[]>, // 可以做类型断言
     },
+    clearCache: Number
   },
   setup(props, context) {
     let items = new Set(); // 存储列表的元素
     // 获取多个dom元素的用法 ref
-    const itembox = (el = null) => {
+    let itembox = (el = null) => {
       items.add(el);
     };
     const refListBox = ref<null | HTMLElement>(null);
@@ -97,7 +98,7 @@ export default defineComponent({
     const noteListSate: Typeing.noteListSate = {
       leftList: [],
       rightList: [],
-      notes: props.notes!,
+      notes: props.notes!
     };
     const state = reactive(noteListSate);
     // 初始化瀑布流列表

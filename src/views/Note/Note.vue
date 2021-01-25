@@ -32,7 +32,7 @@
 <script lang="ts">
 // 平时开发的时候 都是插件给我们提示的 现在我们可以自带提示 通过defineComponent
 import { GlobalState } from "@/store";
-import { computed, defineComponent, PropType, reactive, ref, toRefs, watch } from "vue";
+import { computed, defineComponent, PropType, reactive, ref, ssrContextKey, toRefs, watch } from "vue";
 import { useStore, Store } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { Note, Page } from "../../store/typings";
@@ -49,7 +49,7 @@ export default defineComponent({
   // emits: ["addnotes"], // 这样通过context.emit 就可以做提示
   setup(props, context) {
     let store = useStore<GlobalState>();
-    let { notes, getNotesByPage,deleteNote,isLoading } = useNoteState(store);
+    let { notes, getNotesByPage,deleteNote,isLoading,searchNote } = useNoteState(store);
     let router = useRouter();
     const state = reactive({
       searchValue: "",
@@ -103,7 +103,7 @@ export default defineComponent({
       show,
       handleDel,
       loadMore,
-      isLoading
+      isLoading,
    };
   },
 });
