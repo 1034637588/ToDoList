@@ -15,10 +15,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/addNote',
     name: 'AddNote',
-    // component: () => import (/* webpackChunkName: "AddNote" */'../views/Note/AddNote.vue' )
-    components:{
-      addNote: AddNote
-    },
+    component: () => import (/* webpackChunkName: "AddNote" */'../views/Note/AddNote.vue' ),
+    // components:{
+    //   addNote: AddNote
+    // },
     meta:{
       isAllHeight:true
     }
@@ -28,7 +28,8 @@ const routes: Array<RouteRecordRaw> = [
 // 创建都变成了函数式的写法
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  linkActiveClass:'active'
 })
 
 export default router
