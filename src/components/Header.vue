@@ -15,6 +15,8 @@
   display: flex;
   font-size: 0.2rem;
   align-items: center;
+  padding:0 0.1rem;
+  box-sizing: border-box;
   .h-left,.h-right{
       width: 0.5rem;
       text-align: center;

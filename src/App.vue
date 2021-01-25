@@ -29,7 +29,6 @@ export default defineComponent({
 .box{
   width: 100vw;
   height: 100vh;
-  padding: 0.1rem;
   box-sizing: border-box;
   display: flex;
   flex-flow: column nowrap;

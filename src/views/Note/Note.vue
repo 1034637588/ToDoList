@@ -54,7 +54,8 @@ export default defineComponent({
     const state = reactive({
       searchValue: "",
       page: 1,
-      size: 15
+      size: 15,
+      delId: ''
     });
     //获取初始化数据 并且缓存 如果store存在 就不重新请求
     if(store.state.note.notes.length === 0) {
@@ -76,11 +77,11 @@ export default defineComponent({
     let id:string;
     const longTouch =async (id:string)=>{
         show.value = true;
-        id = id;
+        state.delId = id;
     }
     // 处理删除
     const handleDel= async()=>{
-      await deleteNote(id);
+      await deleteNote(state.delId);
       show.value = false;
     }
     // 处理加载更多
@@ -112,12 +113,15 @@ export default defineComponent({
   width: 100%;
   overflow: hidden;
   flex: 1;
+  padding:0 0.1rem;
+  box-sizing: border-box;
   .van-search {
     padding: 0;
     ::v-deep .van-search__content {
       background-color: rgb(237, 237, 237);
       border-radius: 0.15rem;
     }
+    background-color: rgb(247, 247, 247);
   }
   .delete-box{
     height: 100%;
