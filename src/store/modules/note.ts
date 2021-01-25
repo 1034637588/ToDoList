@@ -24,6 +24,20 @@ const note: Module<NoteState, GlobalState> = {
         },
         [Types.SET_LOADIBG](state,payload:boolean){
             state.isLoading = payload
+        },
+        [Types.UPDATE_NOTES](state, payload: any) {
+            state.notes.forEach((note:Note) => {
+                if(note._id === payload.id){
+                    note.content = payload.note.content;
+                    note.dates =  payload.note.dates;
+                }
+            });
+        },
+        [Types.DELETE_NOTES](state, payload: string) {
+            const index = state.notes.findIndex((note:Note) => {
+                return note._id === payload;
+            });
+            state.notes.splice(index,1);
         }
     },
     actions: {
@@ -42,26 +56,13 @@ const note: Module<NoteState, GlobalState> = {
         // 修改note
         [Types.UPDATE_NOTES]({commit,state},payload:any) {
             return NoteAPI.updateNote(payload.id,payload.note).then(data => {
-                let notes = JSON.parse(JSON.stringify(state.notes));
-                notes.forEach((note:Note) => {
-                    if(note._id === payload.id){
-                        note.content = payload.note.content;
-                        note.dates =  payload.note.dates
-                    }
-                });
-                commit(Types.INIT_NOTES, notes); // 更新数据
+                commit(Types.UPDATE_NOTES, {id:payload.id,note:payload.note}); // 更新数据
             });
         },
         // 删除note
-        [Types.DELETE_NOTES]({ commit }, payload: string) {
+        [Types.DELETE_NOTES]({ commit,state }, payload: string) {
             return NoteAPI.deleteNote<Result<number>>(payload).then(data => {
-                let notes:Note[] = JSON.parse(JSON.stringify(state.notes));
-                let index = notes.findIndex((note:Note) => {
-                    return note._id === payload;
-                });
-                notes.splice(index,1); // 删除
-                commit(Types.INIT_NOTES, notes); // 更新数据
-                return data.data;
+                commit(Types.DELETE_NOTES, payload); // 更新数据
             })
         },
     }

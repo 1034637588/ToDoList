@@ -21,7 +21,7 @@
 import router from "@/router";
 import { GlobalState } from "@/store";
 import { Note, Result } from "@/store/typings";
-import { computed, defineComponent, onMounted, reactive, toRefs } from "vue";
+import { computed, defineComponent, onMounted, reactive, toRefs, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Store, useStore } from "vuex";
 import * as Types from "../../store/action-types";
@@ -41,6 +41,7 @@ export default defineComponent({
         dates: "",
       },
       id: "",
+      oldContent:''
     });
     const routr = useRouter();
     const rout = useRoute();
@@ -60,10 +61,12 @@ export default defineComponent({
       // 有数据需要判断是添加 还是更新
       state.note.dates = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
       if (state.id) {
-        // 更新
-        await updateNote({
-          id:state.id, note:state.note
-        });
+        if (state.oldContent !== state.note.content){ // 如果点击进来没有改变就不更新
+           // 更新
+          await updateNote({
+            id:state.id, note:state.note
+          });
+        }
       } else {
         await addNote(state.note);
       }
@@ -78,6 +81,7 @@ export default defineComponent({
         // 首次从store中获取
         if (item._id === id) {
           state.note.content = item.content;
+          state.oldContent = item.content; // 记录初始值
           state.id = id;
         }
       });
@@ -85,6 +89,7 @@ export default defineComponent({
         //如果刷新页面从后端请求
         NoteAPI.getNoteById<Result<Note>>(id as string).then((data) => {
           state.note.content = data.data.content;
+          state.oldContent = data.data.content;
           state.id = data.data._id!;
         });
       }
