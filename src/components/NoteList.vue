@@ -7,19 +7,17 @@
       @touchend="touchEnd"
       @touchmove="touchMove"
     >
-      <transition-group name="flip-list" class="flip-list" tag="div">
-        <div class="list-item" v-for="item in leftList" :key="item['_id']">
-          <div class="item-content">
-            <p class="item-text">
-              {{ item.content }}
-            </p>
-          </div>
-          <div class="item-bottom">
-            <p>{{ item.dates }}</p>
-          </div>
-          <div class="click-model" :id="item['_id']"></div>
+      <div class="list-item" v-for="item in leftList" :key="item['_id']">
+        <div class="item-content">
+          <p class="item-text">
+            {{ item.content }}
+          </p>
         </div>
-      </transition-group>
+        <div class="item-bottom">
+          <p>{{ item.dates }}</p>
+        </div>
+        <div class="click-model" :id="item['_id']"></div>
+      </div>
     </div>
     <div
       class="list-right"
@@ -28,19 +26,17 @@
       @touchend="touchEnd"
       @touchmove="touchMove"
     >
-      <transition-group name="flip-list" class="flip-list" tag="div">
-        <div class="list-item" v-for="item in rightList" :key="item['_id']">
-          <div class="item-content">
-            <p class="item-text">
-              {{ item.content }}
-            </p>
-          </div>
-          <div class="item-bottom">
-            <p>{{ item.dates }}</p>
-          </div>
-          <div class="click-model" :id="item['_id']"></div>
+      <div class="list-item" v-for="item in rightList" :key="item['_id']">
+        <div class="item-content">
+          <p class="item-text">
+            {{ item.content }}
+          </p>
         </div>
-      </transition-group>
+        <div class="item-bottom">
+          <p>{{ item.dates }}</p>
+        </div>
+        <div class="click-model" :id="item['_id']"></div>
+      </div>
     </div>
     <!-- 用来初次渲染获取高度 -->
     <div class="init-list">
@@ -81,7 +77,7 @@ import LongTouch from "../hooks/longTouch";
 import useLoadMore from "../hooks/useLoadMore";
 import store from "@/store";
 import * as Types from "../store/action-types";
-import useNoteState from '../hooks/useNoteState';
+import useNoteState from "../hooks/useNoteState";
 
 export default defineComponent({
   name: "NoteList",
@@ -97,7 +93,7 @@ export default defineComponent({
       items.add(el);
     };
     const refListBox = ref<null | HTMLElement>(null);
-    useLoadMore(refListBox,context); // 处理触底加载
+    useLoadMore(refListBox, context); // 处理触底加载
     const noteListSate: Typeing.noteListSate = {
       leftList: [],
       rightList: [],
@@ -158,7 +154,7 @@ export default defineComponent({
       touchStart,
       touchEnd,
       touchMove,
-      refListBox
+      refListBox,
     };
   },
 });
@@ -175,8 +171,6 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   overflow: auto;
-  display: flex;
-  position: relative;
   &::-webkit-scrollbar {
     /* 滚动条宽 */
     display: none;
@@ -193,12 +187,16 @@ export default defineComponent({
   }
   .list-left {
     width: 50%;
+    float: left;
+    padding-bottom: 50px;
   }
   .list-right {
     width: 50%;
+    float: left;
     display: flex;
     flex-flow: column nowrap;
     align-items: flex-end;
+    padding-bottom: 50px;
   }
   .init-list {
     width: 50%;
