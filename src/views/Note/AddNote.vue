@@ -30,7 +30,6 @@ import * as NoteAPI from "../../api/notes";
 
 export default defineComponent({
   name: "ToDo",
-  components: {},
   setup(props, context) {
     let store = useStore<GlobalState>();
     let { notes, addNote ,updateNote ,deleteNote} = useNoteStore(store);
