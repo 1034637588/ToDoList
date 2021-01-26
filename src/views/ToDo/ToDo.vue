@@ -51,6 +51,7 @@ export default defineComponent({
   flex-flow: column nowrap;
   overflow-x: hidden;
   overflow-y: auto;
+  padding: 0 0.1rem;
   &::-webkit-scrollbar {
     /* 滚动条宽 */
     display: none;

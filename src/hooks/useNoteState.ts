@@ -15,6 +15,9 @@ export default function useNote(store: Store<GlobalState>) {
     function addNote(paylod:Note) { // 为了获取返回值 使用异步函数封装
       return store.dispatch(`note/${Types.ADD_NOTES}`, paylod);
     }
+    function searchNote(paylod:string) { // 为了获取返回值 使用异步函数封装
+      return store.dispatch(`note/${Types.SEARCH_NOTE}`, paylod);
+    }
     function updateNote(payload:any){
       return store.dispatch(`note/${Types.UPDATE_NOTES}`,payload);
     }
@@ -27,6 +30,7 @@ export default function useNote(store: Store<GlobalState>) {
       addNote,
       updateNote,
       deleteNote,
-      isLoading
+      isLoading,
+      searchNote
     };
   }

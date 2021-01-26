@@ -19,6 +19,9 @@ const note: Module<NoteState, GlobalState> = {
         [Types.INIT_NOTES](state, payload: Note[]) {
             state.notes.push(...payload)
         },
+        [Types.SET_NOTE](state, payload: Note[]) {
+            state.notes = payload
+        },
         [Types.SET_ERROR](state, payload: boolean) {
             state.isRequestError = payload
         },
@@ -45,6 +48,11 @@ const note: Module<NoteState, GlobalState> = {
         [Types.INIT_NOTES]({ commit }, payload: Page) {
             NoteAPI.getNotes<Result<Note[]>>(payload.page, payload.size).then(data => {
                 commit(Types.INIT_NOTES, data.data)
+            })
+        },
+        [Types.SEARCH_NOTE]({ commit }, payload: string){
+            NoteAPI.getNoteListByContent<Result<Note[]>>(payload).then(data=>{
+                commit(Types.SET_NOTE, data.data);
             })
         },
         // 添加note
