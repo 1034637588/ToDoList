@@ -193,6 +193,7 @@ export default defineComponent({
     width: 50%;
     float: left;
     padding-bottom: 50px;
+    padding-left: 5px;
   }
   .list-right {
     width: 50%;
@@ -201,6 +202,7 @@ export default defineComponent({
     flex-flow: column wrap;
     align-items: flex-end;
     padding-bottom: 50px;
+    padding-right: 5px;
   }
   .init-list {
     width: 50%;
@@ -219,6 +221,7 @@ export default defineComponent({
     margin-top: 0.1rem;
     padding: 0.2rem;
     position: relative;
+    box-shadow: 2px 2px 9px #ccc;
     .item-content {
       max-height: 1.25rem;
       font-size: 0.16rem;

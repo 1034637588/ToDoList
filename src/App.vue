@@ -33,12 +33,10 @@ export default defineComponent({
 }
 .inout-enter-to, .inout-leave-form{
   opacity: 1;
-  transform: scale(1);
   transform-origin: bottom right;
 }
 .inout-enter-from ,.inout-leave-to{
   opacity: 0;
-  transform: scale(0);
   transform-origin: bottom right;
 }
 
