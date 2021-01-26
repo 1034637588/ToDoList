@@ -26,7 +26,6 @@ import { useRoute, useRouter } from "vue-router";
 import { Store, useStore } from "vuex";
 import * as Types from "../../store/action-types";
 import useNoteStore from "../../hooks/useNoteState"; // 引入组定义store hooks
-import note from "@/server/controller/notesController";
 import * as NoteAPI from "../../api/notes";
 
 export default defineComponent({
