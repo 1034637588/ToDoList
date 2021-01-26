@@ -175,8 +175,8 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   overflow: auto;
-  display: flex;
   position: relative;
+  display: flex;
   &::-webkit-scrollbar {
     /* 滚动条宽 */
     display: none;
@@ -197,7 +197,7 @@ export default defineComponent({
   .list-right {
     width: 50%;
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: column wrap;
     align-items: flex-end;
   }
   .init-list {
