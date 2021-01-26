@@ -72,7 +72,7 @@ import {
   watch,
 } from "vue";
 import * as Typeing from "../store/typings/index";
-import LongTouch from "../hooks/longTouch";
+import useLongTouch from "../hooks/uselongTouch";
 import useLoadMore from "../hooks/useLoadMore";
 import store from "@/store";
 import * as Types from "../store/action-types";
@@ -130,7 +130,7 @@ export default defineComponent({
     const leftDom = ref<null | HTMLElement>(null);
     const rightDom = ref<null | HTMLElement>(null);
     // 获取长按事件 交给父组件处理
-    LongTouch([leftDom,rightDom],(id: string) => {
+    useLongTouch([leftDom,rightDom],(id: string) => {
       context.emit("longTouch", id);
     });
     onMounted(() => {
