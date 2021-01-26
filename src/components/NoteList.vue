@@ -42,7 +42,7 @@
     <div class="init-list">
       <div
         class="list-item"
-        :ref="itembox"
+        :ref="(el) => {if(el != null) items.push(el) }"
         v-for="item in notes"
         :key="item['_id']"
       >
@@ -63,6 +63,7 @@
 import {
   defineComponent,
   nextTick,
+  onBeforeUpdate,
   onMounted,
   onUnmounted,
   onUpdated,
@@ -88,11 +89,9 @@ export default defineComponent({
     clearCache: Number
   },
   setup(props, context) {
-    let items = new Set(); // 存储列表的元素
+    // 存储列表的元素
+    const items = ref<null | HTMLElement[]>([]); 
     // 获取多个dom元素的用法 ref
-    let itembox = (el = null) => {
-      items.add(el);
-    };
     const refListBox = ref<null | HTMLElement>(null);
     useLoadMore(refListBox, context); // 处理触底加载
     const noteListSate: Typeing.noteListSate = {
@@ -103,15 +102,14 @@ export default defineComponent({
     const state = reactive(noteListSate);
     // 初始化瀑布流列表
     const initList = () => {
-      let leftHeightSum = 0; // 用来分别记录左边当前高度 和右边当前高度
+      // 用来分别记录左边当前高度 和右边当前高度
+      let leftHeightSum = 0; 
       let rightHeightSum = 0;
       let leftArr: any[] = [];
       let rightArr: any[] = [];
       nextTick(() => {
         // 先渲染出来，然后再获取元素的高度进行分区
-        items.delete(null); // 清除已经删除的dom
-        let itemDoms = Array.from(items);
-        itemDoms.forEach((item: any, index) => {
+        items.value!.forEach((item: any, index) => {
           if (leftHeightSum <= rightHeightSum) {
             // 哪边高度低 就放哪边
             leftArr.push(props.notes![index]);
@@ -121,7 +119,8 @@ export default defineComponent({
             rightHeightSum += item?.clientHeight;
           }
         });
-        state.leftList = leftArr.reverse(); // 使倒叙 这样后添加的在上面
+        // 使倒叙 这样后添加的在上面
+        state.leftList = leftArr.reverse(); 
         state.rightList = rightArr.reverse();
       });
     };
@@ -133,7 +132,6 @@ export default defineComponent({
     };
     const { touchStart, touchEnd, touchMove } = LongTouch((id: string) => {
       // 获取长按事件
-      items.clear(); // 将存储的dom元素清空 因为要重新渲染
       context.emit("longTouch", id);
     });
     onMounted(() => {
@@ -141,8 +139,12 @@ export default defineComponent({
       initList();
     });
     onUnmounted(() => {
-      items.clear();
+      items.value = []; 
     });
+    onBeforeUpdate(()=>{
+      // 更新前要清空ref的数组
+      items.value = []; 
+    })
     watch(props!, () => {
       // 参数改变后重新渲染
       state.notes = props.notes!;
@@ -150,7 +152,7 @@ export default defineComponent({
     });
     return {
       ...toRefs(state),
-      itembox,
+      items,
       clickItem,
       touchStart,
       touchEnd,
@@ -172,8 +174,6 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   overflow: auto;
-  position: relative;
-  display: flex;
   &::-webkit-scrollbar {
     /* 滚动条宽 */
     display: none;
