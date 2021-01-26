@@ -4,6 +4,7 @@
       v-model="searchValue"
       placeholder="搜索便签"
       input-align="center"
+      @change="handleChange"
     />
     <note-list 
     :notes="notes"
@@ -94,6 +95,18 @@ export default defineComponent({
        });
       store.commit(`note/${Types.SET_LOADIBG}`,false);
     }
+    // 处理搜索
+    const handleChange = async() => {
+      const { searchValue } = state;
+      if(!searchValue.trim()){
+        await getNotesByPage({
+         page:1,
+         size:15
+       });
+      } else {
+        await searchNote(searchValue);
+      }
+    }
     return {
       notes, 
       clickAdd, 
@@ -104,6 +117,7 @@ export default defineComponent({
       handleDel,
       loadMore,
       isLoading,
+      handleChange
    };
   },
 });

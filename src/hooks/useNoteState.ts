@@ -10,7 +10,7 @@ export default function useNote(store: Store<GlobalState>) {
     let notes = computed(() => store.state.note.notes); // 使用computed可以使数据变成响应式
     let isLoading = computed(()=>store.state.note.isLoading);
     function getNotesByPage(paylod:Page) {
-      store.dispatch(`note/${Types.INIT_NOTES}`, paylod);
+      store.dispatch(`note/${Types.PUSH_NOTES}`, paylod);
     }
     function addNote(paylod:Note) { // 为了获取返回值 使用异步函数封装
       return store.dispatch(`note/${Types.ADD_NOTES}`, paylod);

@@ -16,7 +16,7 @@ const note: Module<NoteState, GlobalState> = {
         [Types.ADD_NOTES](state, payload: Note) { // 添加一条便签
             state.notes.push(payload)
         },
-        [Types.INIT_NOTES](state, payload: Note[]) {
+        [Types.PUSH_NOTES](state, payload: Note[]) {
             state.notes.push(...payload)
         },
         [Types.SET_NOTE](state, payload: Note[]) {
@@ -45,10 +45,14 @@ const note: Module<NoteState, GlobalState> = {
     },
     actions: {
         // 分页请求
-        [Types.INIT_NOTES]({ commit }, payload: Page) {
+        [Types.PUSH_NOTES]({ commit }, payload: Page) {
             NoteAPI.getNotes<Result<Note[]>>(payload.page, payload.size).then(data => {
-                commit(Types.INIT_NOTES, data.data)
-            })
+                if(payload.page === 1) {
+                    commit(Types.SET_NOTE, data.data);
+                }else{
+                    commit(Types.PUSH_NOTES, data.data);
+                }
+            });
         },
         [Types.SEARCH_NOTE]({ commit }, payload: string){
             NoteAPI.getNoteListByContent<Result<Note[]>>(payload).then(data=>{

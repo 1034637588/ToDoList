@@ -2,11 +2,10 @@
   <div class="list-box" ref="refListBox">
     <div
       class="list-left"
+      ref="leftDom"
       @click="clickItem"
-      @touchstart="touchStart"
-      @touchend="touchEnd"
-      @touchmove="touchMove"
     >
+    <!-- 左边列表 -->
       <div class="list-item" v-for="item in leftList" :key="item['_id']">
         <div class="item-content">
           <p class="item-text">
@@ -21,11 +20,10 @@
     </div>
     <div
       class="list-right"
+      ref="rightDom"
       @click="clickItem"
-      @touchstart="touchStart"
-      @touchend="touchEnd"
-      @touchmove="touchMove"
     >
+    <!-- 右边列表 -->
       <div class="list-item" v-for="item in rightList" :key="item['_id']">
         <div class="item-content">
           <p class="item-text">
@@ -85,8 +83,7 @@ export default defineComponent({
   props: {
     notes: {
       type: Array as PropType<Typeing.Note[]>, // 可以做类型断言
-    },
-    clearCache: Number
+    }
   },
   setup(props, context) {
     // 存储列表的元素
@@ -124,14 +121,16 @@ export default defineComponent({
         state.rightList = rightArr.reverse();
       });
     };
+    // 通过事件委托监听item的点击，进行跳转详情
     const clickItem = (e: any) => {
-      // 通过事件委托监听item的点击，进行跳转详情
       if (e.target.className == "click-model") {
         context.emit("ToAddNote", e.target.id);
       }
     };
-    const { touchStart, touchEnd, touchMove } = LongTouch((id: string) => {
-      // 获取长按事件
+    const leftDom = ref<null | HTMLElement>(null);
+    const rightDom = ref<null | HTMLElement>(null);
+    // 获取长按事件 交给父组件处理
+    LongTouch([leftDom,rightDom],(id: string) => {
       context.emit("longTouch", id);
     });
     onMounted(() => {
@@ -154,10 +153,9 @@ export default defineComponent({
       ...toRefs(state),
       items,
       clickItem,
-      touchStart,
-      touchEnd,
-      touchMove,
       refListBox,
+      leftDom,
+      rightDom
     };
   },
 });
