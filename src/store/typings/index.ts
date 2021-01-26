@@ -42,5 +42,4 @@ export interface Result<T> {
 export interface noteListSate {
     leftList: Note[];
     rightList: Note[];
-    notes: Note[];
 }

@@ -1,3 +1,4 @@
+import { debounce } from '@/utils/uiils';
 import { Ref, onMounted, SetupContext } from 'vue';
 
 export default function useLoadMore(element:Ref<null|HTMLElement>,ctx: SetupContext<Record<string, any>>){
@@ -9,18 +10,6 @@ export default function useLoadMore(element:Ref<null|HTMLElement>,ctx: SetupCont
         let scorllHeight = element.value?.scrollHeight;
         if(containerHeight! + scorllTop! + 20 >= scorllHeight!){
             ctx.emit('loadMore');
-        }
-    }
-
-    function debounce(fun:Function,wait:number){
-        let timer:any;
-        return function(){
-        let args = arguments;
-        if(timer) clearTimeout(timer);
-        timer = setTimeout(() => {
-                fun(args);
-                clearTimeout(timer);
-            }, wait);
         }
     }
 

@@ -41,7 +41,7 @@ import * as Types from "../../store/action-types";
 import NoteList from "../../components/NoteList.vue";
 import useNoteState from '../../hooks/useNoteState';
 import { Notify } from 'vant';
-
+import {throttle} from '../../utils/uiils';
 export default defineComponent({
   name: "Note",
   components: {
@@ -95,18 +95,21 @@ export default defineComponent({
        });
       store.commit(`note/${Types.SET_LOADIBG}`,false);
     }
-    // 处理搜索
-    const handleChange = async() => {
-      const { searchValue } = state;
-      if(!searchValue.trim()){
+    // 处理搜索请求逻辑
+    let handleChange = async ()=>{
+       if(!state.searchValue.trim()){
         await getNotesByPage({
          page:1,
          size:15
        });
       } else {
-        await searchNote(searchValue);
+        await searchNote(state.searchValue);
       }
     }
+    // 处理实时搜索
+    let handleSearch = throttle(handleChange,1000);
+    watch(()=>state.searchValue,handleSearch);
+    // 处理搜索
     return {
       notes, 
       clickAdd, 

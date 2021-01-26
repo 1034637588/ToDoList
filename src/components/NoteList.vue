@@ -68,11 +68,12 @@ import {
   PropType,
   reactive,
   ref,
+  toRef,
   toRefs,
   watch,
 } from "vue";
 import * as Typeing from "../store/typings/index";
-import useLongTouch from "../hooks/uselongTouch";
+import useLongTouch from "../hooks/useLongTouch";
 import useLoadMore from "../hooks/useLoadMore";
 import store from "@/store";
 import * as Types from "../store/action-types";
@@ -93,9 +94,10 @@ export default defineComponent({
     useLoadMore(refListBox, context); // 处理触底加载
     const noteListSate: Typeing.noteListSate = {
       leftList: [],
-      rightList: [],
-      notes: props.notes!
+      rightList: []
     };
+    // 可以变成相应式的ref
+    const notes = toRef(props,'notes');
     const state = reactive(noteListSate);
     // 初始化瀑布流列表
     const initList = () => {
@@ -146,7 +148,7 @@ export default defineComponent({
     })
     watch(props!, () => {
       // 参数改变后重新渲染
-      state.notes = props.notes!;
+      notes.value = props.notes!;
       initList();
     });
     return {
@@ -155,7 +157,8 @@ export default defineComponent({
       clickItem,
       refListBox,
       leftDom,
-      rightDom
+      rightDom,
+      notes
     };
   },
 });
