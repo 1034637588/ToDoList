@@ -1,4 +1,4 @@
-import axios from './idnex';
+import axios from '.';
 import { Note } from '@/store/typings';
 
 // 分页
